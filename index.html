@@ -4,7 +4,7 @@
 <title>Site Sayacı</title>
 </head>
 
-<body style="text-align:center;font-family:sans-serif">
+<body style="text-align:center;font-family:Arial">
 
 <h1>Site Sayacı</h1>
 
@@ -12,16 +12,33 @@
 
 <button onclick="arttir()">Arttır</button>
 
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
 <script>
 
-let url = "https://api.countapi.xyz/hit/zizzizzz96/sayac";
+var firebaseConfig = {
+apiKey: "APIKEY",
+authDomain: "sayac-site.firebaseapp.com",
+databaseURL: "https://sayac-site-default-rtdb.firebaseio.com",
+projectId: "sayac-site",
+storageBucket: "sayac-site.appspot.com",
+messagingSenderId: "123456",
+appId: "APPID"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+var db = firebase.database();
+
+var counterRef = db.ref("counter");
+
+counterRef.on("value", function(snapshot){
+document.getElementById("counter").innerText = snapshot.val();
+});
 
 function arttir(){
-fetch(url)
-.then(res => res.json())
-.then(data => {
-document.getElementById("counter").innerText = data.value;
-});
+counterRef.set((parseInt(document.getElementById("counter").innerText) || 0) + 1);
 }
 
 </script>
