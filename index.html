@@ -2,80 +2,92 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Counter</title>
+<title>Mysterious Button</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
 body{
+margin:0;
 background:black;
 color:red;
 font-family:Arial;
 text-align:center;
-margin-top:120px;
 }
 
-#counter{
-font-size:60px;
-transition:0.3s;
+#map{
+height:60vh;
 }
 
 button{
 background:red;
-color:white;
+color:black;
 border:none;
-padding:15px 30px;
+padding:20px;
 font-size:20px;
+margin-top:20px;
 cursor:pointer;
-margin-top:30px;
 }
 </style>
-
 </head>
 
 <body>
 
-<h1 id="counter">0</h1>
+<h1>Do Not Press</h1>
 
-<button onclick="increase()">...</button>
+<div id="map"></div>
 
-<script type="module">
+<button onclick="press()">PRESS</button>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+<script>
 
-const firebaseConfig = {
-apiKey: "AIzaSyDUlwLPcHndB5aUX7OuRvR9VcHKEntoppM",
-authDomain: "sayac-site.firebaseapp.com",
-databaseURL: "https://sayac-site-default-rtdb.firebaseio.com",
-projectId: "sayac-site",
-storageBucket: "sayac-site.firebasestorage.app",
-messagingSenderId: "910377077312",
-appId: "1:910377077312:web:1b5bb5521c302091096da5"
-};
+const supabase = window.supabase.createClient(
+"https://wfdznmedvdoakdjdogqh.supabase.co",
+"sb_publishable_ErhCPnxIZz-5VKOvE1oPnA_5KwyISi_"
+)
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const map = L.map('map').setView([20,0],2)
 
-const counterRef = ref(db, "counter");
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+maxZoom:19
+}).addTo(map)
 
-onValue(counterRef, (snapshot) => {
-let value = snapshot.val() || 0;
+async function loadPoints(){
 
-const el = document.getElementById("counter");
+let { data } = await supabase
+.from("presses")
+.select("*")
 
-el.innerText = value;
+data.forEach(p=>{
+L.circle([p.lat,p.lng],{
+radius:20000,
+color:"red"
+}).addTo(map)
+})
 
-el.style.transform = "scale(1.5)";
-setTimeout(()=>{
-el.style.transform = "scale(1)";
-},200);
+}
 
-});
+loadPoints()
 
-window.increase = function(){
+function press(){
 
-runTransaction(counterRef,(current)=>{
-return (current || 0) + 1;
-});
+navigator.geolocation.getCurrentPosition(async pos=>{
+
+let lat = pos.coords.latitude
+let lng = pos.coords.longitude
+
+await supabase
+.from("presses")
+.insert([{lat:lat,lng:lng}])
+
+L.circle([lat,lng],{
+radius:20000,
+color:"red"
+}).addTo(map)
+
+})
 
 }
 
