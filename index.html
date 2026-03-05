@@ -42,6 +42,15 @@ counterRef.set((parseInt(document.getElementById("counter").innerText) || 0) + 1
 }
 
 </script>
+  function updateClock(){
+let now = new Date();
+let time = now.toLocaleTimeString();
+document.getElementById("clock").innerText = time;
+}
+
+setInterval(updateClock,1000);
+updateClock();
 
 </body>
+<h2 id="clock"></h2>
 </html>
