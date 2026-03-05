@@ -5,32 +5,19 @@
 <title>Test</title>
 </head>
 
-<body style="text-align:center;font-family:Arial;margin-top:100px;">
+<body style="background:black;color:white;text-align:center;margin-top:100px;font-size:30px">
 
-<h1>Site Test</h1>
+<div id="count">0</div>
 
-<h2 id="clock"></h2>
-
-<h2 id="counter">0</h2>
-
-<button onclick="arttir()">Arttır</button>
+<button onclick="press()">PRESS</button>
 
 <script>
+let count = 0;
 
-function saat(){
-  const now = new Date();
-  document.getElementById("clock").innerText = now.toLocaleTimeString();
+function press(){
+  count++;
+  document.getElementById("count").innerText = count;
 }
-
-setInterval(saat,1000);
-
-let sayac = 0;
-
-function arttir(){
-  sayac++;
-  document.getElementById("counter").innerText = sayac;
-}
-
 </script>
 
 </body>
