@@ -2,15 +2,18 @@
 <html>
 <head>
 <title>Site Sayacı</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body style="text-align:center;font-family:Arial">
+<body style="text-align:center; font-family:Arial; margin-top:50px;">
 
 <h1>Site Sayacı</h1>
 
-<h2 id="counter">0</h2>
+<h2 id="sayac">0</h2>
 
-<button onclick="arttir()">Arttır</button>
+<h3 id="saat"></h3>
+
+<button onclick="arttir()">Ziyaret</button>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -20,37 +23,42 @@
 var firebaseConfig = {
 apiKey: "APIKEY",
 authDomain: "sayac-site.firebaseapp.com",
-databaseURL: "https://sayac-site-default-rtdb.firebaseio.com",
+databaseURL: "https://sayac-site-default-rtdb.firebaseio.com/",
 projectId: "sayac-site",
 storageBucket: "sayac-site.appspot.com",
-messagingSenderId: "123456",
-appId: "APPID"
+messagingSenderId: "XXXX",
+appId: "XXXX"
 };
 
 firebase.initializeApp(firebaseConfig);
 
 var db = firebase.database();
-
 var counterRef = db.ref("counter");
 
 counterRef.on("value", function(snapshot){
-document.getElementById("counter").innerText = snapshot.val();
+document.getElementById("sayac").innerText = snapshot.val();
 });
 
 function arttir(){
-counterRef.set((parseInt(document.getElementById("counter").innerText) || 0) + 1);
+counterRef.set((parseInt(document.getElementById("sayac").innerText) || 0) + 1);
 }
+
+function saatGuncelle(){
+
+var simdi = new Date();
+
+var saat = simdi.getHours().toString().padStart(2,"0");
+var dakika = simdi.getMinutes().toString().padStart(2,"0");
+var saniye = simdi.getSeconds().toString().padStart(2,"0");
+
+document.getElementById("saat").innerText = saat + ":" + dakika + ":" + saniye;
+
+}
+
+setInterval(saatGuncelle,1000);
+saatGuncelle();
 
 </script>
-  function updateClock(){
-let now = new Date();
-let time = now.toLocaleTimeString();
-document.getElementById("clock").innerText = time;
-}
-
-setInterval(updateClock,1000);
-updateClock();
 
 </body>
-<h2 id="clock"></h2>
 </html>
