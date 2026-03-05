@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Site Sayacı</title>
+</head>
+
+<body style="text-align:center;font-family:sans-serif">
+
+<h1>Site Sayacı</h1>
+<h2 id="counter">0</h2>
+
+<button onclick="arttir()">Arttır</button>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<script>
+var firebaseConfig = {
+databaseURL: "https://sayac-site-default-rtdb.firebaseio.com/"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+var db = firebase.database().ref("counter");
+
+db.on("value", function(snapshot) {
+document.getElementById("counter").innerText = snapshot.val();
+});
+
+function arttir() {
+db.set((parseInt(document.getElementById("counter").innerText) + 1));
+}
+</script>
+
+</body>
+</html>
