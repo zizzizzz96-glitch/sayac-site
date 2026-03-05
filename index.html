@@ -1,97 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Mysterious Button</title>
+<title>Konum Haritası</title>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
-body{
-margin:0;
-background:black;
-color:red;
-font-family:Arial;
-text-align:center;
-}
-
 #map{
-height:60vh;
-}
-
-button{
-background:red;
-color:black;
-border:none;
-padding:20px;
-font-size:20px;
-margin-top:20px;
-cursor:pointer;
+height:100vh;
+width:100%;
 }
 </style>
+
 </head>
 
 <body>
 
-<h1>Do Not Press</h1>
-
 <div id="map"></div>
-
-<button onclick="press()">PRESS</button>
 
 <script>
 
-const supabase = window.supabase.createClient(
-"https://wfdznmedvdoakdjdogqh.supabase.co",
-"sb_publishable_ErhCPnxIZz-5VKOvE1oPnA_5KwyISi_"
-)
+const supabaseUrl = "https://wfdznmedvdoakdjdogqh.supabase.co"
+const supabaseKey = "sb_publishable_ErhCPnxIZz-5VKOvE1oPnA_5KwyISi_"
 
-const map = L.map('map').setView([20,0],2)
+const supabase = supabase.createClient(supabaseUrl, supabaseKey)
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-maxZoom:19
-}).addTo(map)
+function sendLocation(lat,lng){
 
-async function loadPoints(){
-
-let { data } = await supabase
-.from("presses")
-.select("*")
-
-data.forEach(p=>{
-L.circle([p.lat,p.lng],{
-radius:20000,
-color:"red"
-}).addTo(map)
-})
+supabase
+.from("locations")
+.insert([
+{
+lat:lat,
+lng:lng
+}
+])
 
 }
 
-loadPoints()
-
-function press(){
-
-navigator.geolocation.getCurrentPosition(async pos=>{
-
-let lat = pos.coords.latitude
-let lng = pos.coords.longitude
-
-await supabase
-.from("presses")
-.insert([{lat:lat,lng:lng}])
-
-L.circle([lat,lng],{
-radius:20000,
-color:"red"
-}).addTo(map)
-
-})
-
-}
-
-</script>
-
-</body>
-</html>
+function init
