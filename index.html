@@ -2,39 +2,30 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>?</title>
+<title>Counter</title>
 
 <style>
 body{
 background:black;
-color:white;
+color:red;
 font-family:Arial;
 text-align:center;
 margin-top:120px;
 }
 
-h1{
-font-size:28px;
-opacity:0.8;
-}
-
 #counter{
-font-size:90px;
-margin:40px;
+font-size:60px;
+transition:0.3s;
 }
 
 button{
-font-size:24px;
-padding:15px 40px;
 background:red;
 color:white;
 border:none;
-border-radius:8px;
+padding:15px 30px;
+font-size:20px;
 cursor:pointer;
-}
-
-button:hover{
-background:#cc0000;
+margin-top:30px;
 }
 </style>
 
@@ -42,11 +33,9 @@ background:#cc0000;
 
 <body>
 
-<h1>Bu butona neden basıyorsun?</h1>
+<h1 id="counter">0</h1>
 
-<div id="counter">0</div>
-
-<button onclick="artir()">BAS</button>
+<button onclick="increase()">...</button>
 
 <script type="module">
 
@@ -58,7 +47,7 @@ apiKey: "AIzaSyDUlwLPcHndB5aUX7OuRvR9VcHKEntoppM",
 authDomain: "sayac-site.firebaseapp.com",
 databaseURL: "https://sayac-site-default-rtdb.firebaseio.com",
 projectId: "sayac-site",
-storageBucket: "sayac-site.appspot.com",
+storageBucket: "sayac-site.firebasestorage.app",
 messagingSenderId: "910377077312",
 appId: "1:910377077312:web:1b5bb5521c302091096da5"
 };
@@ -66,44 +55,28 @@ appId: "1:910377077312:web:1b5bb5521c302091096da5"
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-const counterRef = ref(db,"counter");
+const counterRef = ref(db, "counter");
 
-let currentNumber = 0;
+onValue(counterRef, (snapshot) => {
+let value = snapshot.val() || 0;
 
-function animateCounter(newNumber){
-let start = currentNumber;
-let end = newNumber;
-let duration = 300;
-let startTime = null;
+const el = document.getElementById("counter");
 
-function step(timestamp){
-if(!startTime) startTime = timestamp;
+el.innerText = value;
 
-let progress = timestamp - startTime;
-let value = Math.floor(start + (end-start)*(progress/duration));
+el.style.transform = "scale(1.5)";
+setTimeout(()=>{
+el.style.transform = "scale(1)";
+},200);
 
-document.getElementById("counter").innerText = value;
-
-if(progress < duration){
-requestAnimationFrame(step);
-}else{
-document.getElementById("counter").innerText = end;
-currentNumber = end;
-}
-}
-
-requestAnimationFrame(step);
-}
-
-onValue(counterRef,(snapshot)=>{
-const newValue = snapshot.val() || 0;
-animateCounter(newValue);
 });
 
-window.artir = function(){
+window.increase = function(){
+
 runTransaction(counterRef,(current)=>{
 return (current || 0) + 1;
 });
+
 }
 
 </script>
