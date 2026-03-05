@@ -2,54 +2,52 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Ziyaretçi Sayacı</title>
-
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
+<title>Sayaç Site</title>
 </head>
 
-<body style="text-align:center;font-family:Arial">
+<body>
 
-<h1>Site Ziyaretçi Sayacı</h1>
-
+<h1>Sayaç</h1>
 <h2 id="counter">0</h2>
 
-<button onclick="arttir()">Sayaç Artır</button>
+<button onclick="artir()">Arttır</button>
 
 <h3 id="clock"></h3>
 
-<script>
+<script type="module">
 
-var firebaseConfig = {
-  apiKey: "AIzaSyDUlwLPcHndB5aUX7OuRvR9VcHKEntoppM",
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "API_KEY_BURAYA",
   authDomain: "sayac-site.firebaseapp.com",
   databaseURL: "https://sayac-site-default-rtdb.firebaseio.com",
   projectId: "sayac-site",
-  storageBucket: "sayac-site.firebasestorage.app",
+  storageBucket: "sayac-site.appspot.com",
   messagingSenderId: "910377077312",
   appId: "1:910377077312:web:1b5bb5521c302091096da5"
 };
 
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-var db = firebase.database();
-var ref = db.ref("sayac");
+const counterRef = ref(db, "counter");
 
-ref.on("value", function(snapshot){
+onValue(counterRef, (snapshot) => {
   document.getElementById("counter").innerText = snapshot.val() || 0;
 });
 
-function arttir(){
-  ref.transaction(function(current){
+window.artir = function() {
+  runTransaction(counterRef, (current) => {
     return (current || 0) + 1;
   });
 }
 
-function saat(){
-  var now = new Date();
+function saat() {
+  const now = new Date();
   document.getElementById("clock").innerText =
-  now.toLocaleTimeString();
+    now.toLocaleTimeString();
 }
 
 setInterval(saat,1000);
