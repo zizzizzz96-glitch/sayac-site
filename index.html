@@ -1,67 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Do Not Press</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+<title>Test Sayfası</title>
 <style>
 body{
-background:black;
-color:red;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-font-family:monospace;
+  font-family: Arial;
+  text-align:center;
+  margin-top:100px;
 }
-
+#clock{
+  font-size:40px;
+  margin:20px;
+}
+#counter{
+  font-size:40px;
+  margin:20px;
+}
 button{
-background:black;
-color:red;
-border:2px solid red;
-padding:20px 40px;
-font-size:24px;
-cursor:pointer;
+  font-size:20px;
+  padding:10px 20px;
 }
 </style>
 </head>
 
 <body>
 
-<button onclick="press()">DO NOT PRESS</button>
+<h1>Site Test</h1>
 
-<script>
-
-const supabaseClient = window.supabase.createClient(
-"https://wfdznmedvdoakdjdogqh.supabase.co",
-"sb_publishable_ErhCPnxIZz-5VKOvE1oPnA_5KwyISi_"
-)
-
-function press(){
-
-navigator.geolocation.getCurrentPosition(async (pos)=>{
-
-let lat = pos.coords.latitude
-let lng = pos.coords.longitude
-
-await supabaseClient
-.from("locations")
-.insert([
-{
-lat:lat,
-lng:lng
-}
-])
-
-alert("you pressed it")
-
-})
-
-}
-
-</script>
-
-</body>
-</html>
+<div id="clock">00
