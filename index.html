@@ -22,7 +22,7 @@ background:black;
 color:red;
 border:2px solid red;
 padding:20px 40px;
-font-size:20px;
+font-size:24px;
 cursor:pointer;
 }
 </style>
@@ -34,7 +34,7 @@ cursor:pointer;
 
 <script>
 
-const supabase = window.supabase.createClient(
+const supabaseClient = window.supabase.createClient(
 "https://wfdznmedvdoakdjdogqh.supabase.co",
 "sb_publishable_ErhCPnxIZz-5VKOvE1oPnA_5KwyISi_"
 )
@@ -44,4 +44,24 @@ function press(){
 navigator.geolocation.getCurrentPosition(async (pos)=>{
 
 let lat = pos.coords.latitude
-let lng = pos
+let lng = pos.coords.longitude
+
+await supabaseClient
+.from("locations")
+.insert([
+{
+lat:lat,
+lng:lng
+}
+])
+
+alert("you pressed it")
+
+})
+
+}
+
+</script>
+
+</body>
+</html>
