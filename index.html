@@ -1,31 +1,37 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Test Sayfası</title>
-<style>
-body{
-  font-family: Arial;
-  text-align:center;
-  margin-top:100px;
-}
-#clock{
-  font-size:40px;
-  margin:20px;
-}
-#counter{
-  font-size:40px;
-  margin:20px;
-}
-button{
-  font-size:20px;
-  padding:10px 20px;
-}
-</style>
+<title>Test</title>
 </head>
 
-<body>
+<body style="text-align:center;font-family:Arial;margin-top:100px;">
 
 <h1>Site Test</h1>
 
-<div id="clock">00
+<h2 id="clock"></h2>
+
+<h2 id="counter">0</h2>
+
+<button onclick="arttir()">Arttır</button>
+
+<script>
+
+function saat(){
+  const now = new Date();
+  document.getElementById("clock").innerText = now.toLocaleTimeString();
+}
+
+setInterval(saat,1000);
+
+let sayac = 0;
+
+function arttir(){
+  sayac++;
+  document.getElementById("counter").innerText = sayac;
+}
+
+</script>
+
+</body>
+</html>
