@@ -2,17 +2,51 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Sayaç Site</title>
+<title>?</title>
+
+<style>
+body{
+background:black;
+color:white;
+font-family:Arial;
+text-align:center;
+margin-top:120px;
+}
+
+h1{
+font-size:28px;
+opacity:0.8;
+}
+
+#counter{
+font-size:90px;
+margin:40px;
+}
+
+button{
+font-size:24px;
+padding:15px 40px;
+background:red;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+button:hover{
+background:#cc0000;
+}
+</style>
+
 </head>
 
 <body>
 
-<h1>Sayaç</h1>
-<h2 id="counter">0</h2>
+<h1>Bu butona neden basıyorsun?</h1>
 
-<button onclick="artir()">Arttır</button>
+<div id="counter">0</div>
 
-<h3 id="clock"></h3>
+<button onclick="artir()">BAS</button>
 
 <script type="module">
 
@@ -20,37 +54,57 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDUlwLPcHndB5aUX7OuRvR9VcHKEntoppM",
-  authDomain: "sayac-site.firebaseapp.com",
-  databaseURL: "https://sayac-site-default-rtdb.firebaseio.com",
-  projectId: "sayac-site",
-  storageBucket: "sayac-site.appspot.com",
-  messagingSenderId: "910377077312",
-  appId: "1:910377077312:web:1b5bb5521c302091096da5"
+apiKey: "AIzaSyDUlwLPcHndB5aUX7OuRvR9VcHKEntoppM",
+authDomain: "sayac-site.firebaseapp.com",
+databaseURL: "https://sayac-site-default-rtdb.firebaseio.com",
+projectId: "sayac-site",
+storageBucket: "sayac-site.appspot.com",
+messagingSenderId: "910377077312",
+appId: "1:910377077312:web:1b5bb5521c302091096da5"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-const counterRef = ref(db, "counter");
+const counterRef = ref(db,"counter");
 
-onValue(counterRef, (snapshot) => {
-  document.getElementById("counter").innerText = snapshot.val() || 0;
+let currentNumber = 0;
+
+function animateCounter(newNumber){
+let start = currentNumber;
+let end = newNumber;
+let duration = 300;
+let startTime = null;
+
+function step(timestamp){
+if(!startTime) startTime = timestamp;
+
+let progress = timestamp - startTime;
+let value = Math.floor(start + (end-start)*(progress/duration));
+
+document.getElementById("counter").innerText = value;
+
+if(progress < duration){
+requestAnimationFrame(step);
+}else{
+document.getElementById("counter").innerText = end;
+currentNumber = end;
+}
+}
+
+requestAnimationFrame(step);
+}
+
+onValue(counterRef,(snapshot)=>{
+const newValue = snapshot.val() || 0;
+animateCounter(newValue);
 });
 
-window.artir = function() {
-  runTransaction(counterRef, (current) => {
-    return (current || 0) + 1;
-  });
+window.artir = function(){
+runTransaction(counterRef,(current)=>{
+return (current || 0) + 1;
+});
 }
-
-function saat() {
-  const now = new Date();
-  document.getElementById("clock").innerText =
-    now.toLocaleTimeString();
-}
-
-setInterval(saat,1000);
 
 </script>
 
