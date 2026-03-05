@@ -2,113 +2,57 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Site Sayacı</title>
+<title>Ziyaretçi Sayacı</title>
 
-<style>
-
-body{
-background:#111;
-color:white;
-font-family:Arial;
-text-align:center;
-margin-top:120px;
-}
-
-h1{
-font-size:40px;
-margin-bottom:20px;
-}
-
-#counter{
-font-size:80px;
-font-weight:bold;
-color:#00ffcc;
-transition:0.3s;
-}
-
-#clock{
-font-size:30px;
-margin-top:10px;
-color:#ff4d4d;
-}
-
-button{
-margin-top:30px;
-padding:15px 40px;
-font-size:20px;
-border:none;
-border-radius:10px;
-background:#00ffcc;
-color:black;
-cursor:pointer;
-transition:0.3s;
-}
-
-button:hover{
-background:#00ccaa;
-transform:scale(1.05);
-}
-
-</style>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 </head>
 
-<body>
+<body style="text-align:center;font-family:Arial">
 
-<h1>🚀 Site Sayacı</h1>
+<h1>Site Ziyaretçi Sayacı</h1>
 
-<div id="counter">0</div>
+<h2 id="counter">0</h2>
 
-<div id="clock">00:00:00</div>
+<button onclick="arttir()">Sayaç Artır</button>
 
-<button onclick="arttir()">Ziyaret Et</button>
-
-
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<h3 id="clock"></h3>
 
 <script>
 
 var firebaseConfig = {
-apiKey: "APIKEY",
-authDomain: "PROJECT.firebaseapp.com",
-databaseURL: "https://PROJECT-default-rtdb.firebaseio.com/",
-projectId: "PROJECT",
-storageBucket: "PROJECT.appspot.com",
-messagingSenderId: "ID",
-appId: "APPID"
+  apiKey: "AIzaSyDUlwLPcHndB5aUX7OuRvR9VcHKEntoppM",
+  authDomain: "sayac-site.firebaseapp.com",
+  databaseURL: "https://sayac-site-default-rtdb.firebaseio.com",
+  projectId: "sayac-site",
+  storageBucket: "sayac-site.firebasestorage.app",
+  messagingSenderId: "910377077312",
+  appId: "1:910377077312:web:1b5bb5521c302091096da5"
 };
 
 firebase.initializeApp(firebaseConfig);
 
 var db = firebase.database();
-var counterRef = db.ref("counter");
+var ref = db.ref("sayac");
 
-counterRef.on("value", function(snapshot){
-document.getElementById("counter").innerText = snapshot.val();
+ref.on("value", function(snapshot){
+  document.getElementById("counter").innerText = snapshot.val() || 0;
 });
 
 function arttir(){
-counterRef.transaction(function(current){
-return (current || 0) + 1;
-});
+  ref.transaction(function(current){
+    return (current || 0) + 1;
+  });
 }
 
-function saatGuncelle(){
-
-var now = new Date();
-
-var saat = String(now.getHours()).padStart(2,"0");
-var dakika = String(now.getMinutes()).padStart(2,"0");
-var saniye = String(now.getSeconds()).padStart(2,"0");
-
-document.getElementById("clock").innerText =
-saat + ":" + dakika + ":" + saniye;
-
+function saat(){
+  var now = new Date();
+  document.getElementById("clock").innerText =
+  now.toLocaleTimeString();
 }
 
-setInterval(saatGuncelle,1000);
-saatGuncelle();
+setInterval(saat,1000);
 
 </script>
 
