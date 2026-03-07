@@ -1,25 +1,58 @@
 <!DOCTYPE html>
 <html>
+<head>
+<meta charset="UTF-8">
+<title>Visitor Counter</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
 <body>
 
-<h2>Press Counter</h2>
-<h1 id="count">0</h1>
-
-<button onclick="press()">PRESS</button>
+<h1>Ziyaretçi Sayacı</h1>
+<p id="count">Yükleniyor...</p>
 
 <script>
 
-let count = 0
+const supabaseUrl = "https://wfdznmedvdoakdjdogqh.supabase.co";
 
-function press() {
+const supabaseKey = "sb_publishable_ErhCPnxIZz-5VKOvE1oPnA_5KwyISi_";
 
-count++
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-document.getElementById("count").innerText = count
+async function addVisitor(lat, lon) {
 
-alert("buton çalıştı")
+await supabase
+.from("visitors")
+.insert([
+{
+latitude: lat,
+longitude: lon
+}
+]);
 
 }
+
+async function getCount(){
+
+let { count } = await supabase
+.from("visitors")
+.select("*", { count: "exact", head: true });
+
+document.getElementById("count").innerText =
+"Toplam ziyaretçi: " + count;
+
+}
+
+navigator.geolocation.getCurrentPosition(async (pos)=>{
+
+let lat = pos.coords.latitude;
+let lon = pos.coords.longitude;
+
+await addVisitor(lat,lon);
+
+getCount();
+
+});
 
 </script>
 
