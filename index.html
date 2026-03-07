@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Buton Sayacı</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<title>Sayaç</title>
 </head>
 
 <body style="text-align:center;font-family:Arial">
 
 <h1>Butona Bas</h1>
 
-<h2 id="count">Yükleniyor...</h2>
+<h2 id="count">0</h2>
 
 <button onclick="increase()">Tıkla</button>
 
@@ -17,45 +16,16 @@
 
 <script>
 
-const supabaseUrl = "https://wfdznmedvdoakdjdogqh.supabase.co"
-const supabaseKey = "sb_publishable_ErhCPnxIZz-5VKOvE1oPnA_5KwyISi_"
+let count = 0
 
-const supabase = supabase.createClient(supabaseUrl, supabaseKey)
+function increase(){
 
-async function loadCount(){
-
-let { data } = await supabase
-.from('click_counter')
-.select('count')
-.eq('id',1)
-.single()
-
-document.getElementById("count").innerText = data.count
+count++
+document.getElementById("count").innerText = count
 
 }
 
-async function increase(){
-
-let { data } = await supabase
-.from('click_counter')
-.select('count')
-.eq('id',1)
-.single()
-
-let newCount = data.count + 1
-
-await supabase
-.from('click_counter')
-.update({count:newCount})
-.eq('id',1)
-
-loadCount()
-
-}
-
-loadCount()
-
-function clock(){
+function updateClock(){
 
 let now = new Date()
 
@@ -64,7 +34,7 @@ now.toLocaleTimeString()
 
 }
 
-setInterval(clock,1000)
+setInterval(updateClock,1000)
 
 </script>
 
